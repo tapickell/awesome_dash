@@ -54,6 +54,10 @@ defmodule AwesomeDash.Scene.Dashboard do
     {:ok, graph, push: graph}
   end
 
+  # this is a simple way to do this
+  # if we want to color parts separately then we need different
+  # text primitives for each and to translate each horizontally by the
+  # index of previous text + length of the previous text
   def handle_info({:sensor, :data, {:battery0, data, _}}, graph) do
     {state, percent, time, wear, current_power} = format_data(data)
     graph = graph
