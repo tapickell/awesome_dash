@@ -29,7 +29,8 @@ defmodule AwesomeDash.MixProject do
       # These deps are optional and are included as they are often used.
       # If your app doesn't need them, they are safe to remove.
       {:scenic_sensor, "~> 0.7"},
-      {:scenic_clock, "~> 0.10"}
+      {:scenic_clock, "~> 0.10"},
+      {:toolshed, "~> 0.2.7"}
     ]
   end
 end

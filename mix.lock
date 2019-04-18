@@ -6,4 +6,5 @@
   "scenic_clock": {:hex, :scenic_clock, "0.10.0", "5be4a87ed425c07ae9d05e833eddbdcc026b67ba8059fc979586e2efc067cd77", [:mix], [{:scenic, "~> 0.10", [hex: :scenic, repo: "hexpm", optional: false]}], "hexpm"},
   "scenic_driver_glfw": {:hex, :scenic_driver_glfw, "0.10.0", "01a00c8da910c56ef908bf886826a5a28989a3919b6e63b982e66ba226d3bf9d", [:make, :mix], [{:elixir_make, "~> 0.5", [hex: :elixir_make, repo: "hexpm", optional: false]}, {:scenic, "~> 0.10", [hex: :scenic, repo: "hexpm", optional: false]}], "hexpm"},
   "scenic_sensor": {:hex, :scenic_sensor, "0.7.0", "a12aed7596fbab025a535f912325da5a087ff704e96f7acb274c3034d832f9ce", [:mix], [], "hexpm"},
+  "toolshed": {:hex, :toolshed, "0.2.7", "18db27b5edfe3b2518d0111aa88b53bb1601bc64382edd321174c83fd89cba90", [:mix], [{:nerves_runtime, "~> 0.8", [hex: :nerves_runtime, repo: "hexpm", optional: true]}], "hexpm"},
 }

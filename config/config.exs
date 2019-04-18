@@ -5,7 +5,7 @@ use Mix.Config
 # Configure the main viewport for the Scenic application
 config :awesome_dash, :viewport, %{
   name: :main_viewport,
-  size: {700, 600},
+  size: {900, 200},
   default_scene: {AwesomeDash.Scene.Splash, AwesomeDash.Scene.Dashboard},
   drivers: [
     %{
