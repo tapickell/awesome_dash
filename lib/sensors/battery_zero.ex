@@ -1,6 +1,8 @@
 defmodule AwesomeDash.Sensor.BatteryZero do
   use GenServer
 
+  require Logger
+
   alias Scenic.Sensor
 
   @name :battery0
@@ -28,9 +30,9 @@ defmodule AwesomeDash.Sensor.BatteryZero do
   end
 
   def handle_info(:tick, %{data: stale_data, t: t} = state) do
-    fresh_data =
-      AwesomeDash.BatteryData.fetch(@battery)
-      |> IO.inspect(label: "Fresh Data: #{@battery}")
+    fresh_data = AwesomeDash.BatteryData.fetch(@battery)
+
+    Logger.info("BAT0 fresh_data")
 
     if fresh_data != stale_data do
       Sensor.publish(@name, fresh_data)

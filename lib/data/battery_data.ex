@@ -65,7 +65,7 @@ defmodule AwesomeDash.BatteryData do
     read_value(
       battery,
       @status,
-      fn s -> String.trim(s, @nl) |> IO.inspect(label: "status") end,
+      fn s -> String.trim(s, @nl) end,
       @string_default
     )
   end

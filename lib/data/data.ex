@@ -1,4 +1,7 @@
 defmodule AwesomeDash.Data do
+
+  require Logger
+
   @div "/"
 
   def read_value(file_path, filename, parse, default) do
@@ -6,11 +9,14 @@ defmodule AwesomeDash.Data do
          true <- File.exists?(file_location),
          {:ok, value} <- File.read(file_location),
          {parsed_value, _} <- parse.(value) do
-      parsed_value |> IO.inspect(label: "parsed value for #{file_location}")
+      Logger.info("read value: #{parsed_value}")
+      parsed_value
     else
       :error -> default
       false -> default
-      string when is_binary(string) -> string |> IO.inspect(label: "UNKNOWN IN READ VALUE CATCH")
+      string when is_binary(string) ->
+        Logger.info("string value: #{string}")
+        string
     end
   end
 
@@ -18,10 +24,9 @@ defmodule AwesomeDash.Data do
     file_path
     |> file_location(filename)
     |> File.exists?()
-    |> IO.inspect(label: "file exists? #{filename}")
   end
 
   defp file_location(file_path, filename) do
-    List.flatten([file_path, @div, filename]) |> IO.inspect(label: "file_location")
+    List.flatten([file_path, @div, filename])
   end
 end

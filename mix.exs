@@ -30,6 +30,7 @@ defmodule AwesomeDash.MixProject do
       # If your app doesn't need them, they are safe to remove.
       {:scenic_sensor, "~> 0.7"},
       {:scenic_clock, "~> 0.10"},
+      {:ring_logger, "~> 0.6.1"},
       {:toolshed, "~> 0.2.7"}
     ]
   end
