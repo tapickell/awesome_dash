@@ -5,6 +5,7 @@ defmodule AwesomeDash.Sensor.Supervisor do
   use Supervisor
 
   alias AwesomeDash.Sensor.BatteryZero
+  alias AwesomeDash.Sensor.BatteryOne
 
   def start_link(_) do
     Supervisor.start_link(__MODULE__, :ok)
@@ -13,7 +14,8 @@ defmodule AwesomeDash.Sensor.Supervisor do
   def init(:ok) do
     children = [
       Scenic.Sensor,
-      BatteryZero
+      BatteryZero,
+      BatteryOne
     ]
 
     Supervisor.init(children, strategy: :one_for_one)

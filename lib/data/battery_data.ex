@@ -22,7 +22,26 @@ defmodule AwesomeDash.BatteryData do
 
   @nl "\n"
 
-  # do we trap exits from tasks and then return defaults on failure
+  @docnotes """
+   TODO - do we trap exits from tasks and then return defaults on failure
+
+   It would be nice to only check some of the file exists?
+   calls on initial run then store that state and check that
+   instead of always seeing if the files exists?
+   these checks are OS specific and your OS is not going to
+   change which file it writes the data to during runtime
+   the only weirdness is when a new battery is added w/out reboot
+   then some of the files are not written too.
+   this may be a small edge case I believe as the device would have to have
+   power bridge and also internal and external batteries
+   my X240 does and I saw this bug using Vicious battery widget
+   when I added a new battery while the system was running of
+   the internal battery. It could not get a value from one of
+   the files that was not checked before reading from
+   that lib assumes that the file will always exist
+   after fully charging the new battery and then rebooting the system
+   that file then was existing and the widget / and desktop worked again
+  """
 
   def fetch(battery) when battery in @batteries do
     with 1 <- battery_present(battery) do

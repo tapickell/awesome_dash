@@ -1,11 +1,11 @@
-defmodule AwesomeDash.Sensor.BatteryZero do
+defmodule AwesomeDash.Sensor.BatteryOne do
   use GenServer
 
   alias Scenic.Sensor
 
-  @name :battery0
+  @name :battery1
   @version "0.1.0"
-  @description "Battery sensor publishes data for BAT0"
+  @description "Battery sensor publishes data for BAT1"
 
   @timer_ms 10000
 
@@ -15,7 +15,7 @@ defmodule AwesomeDash.Sensor.BatteryZero do
               data: %{state: nil, percent: nil, time: nil, wear: nil, current_power: nil}
   end
 
-  @battery "BAT0"
+  @battery "BAT1"
 
   def start_link(_), do: GenServer.start_link(__MODULE__, :ok, name: @name)
 
