@@ -28,7 +28,9 @@ defmodule AwesomeDash.Sensor.BatteryZero do
   end
 
   def handle_info(:tick, %{data: stale_data, t: t} = state) do
-    fresh_data = AwesomeDash.BatteryData.fetch(@battery)
+    fresh_data =
+      AwesomeDash.BatteryData.fetch(@battery)
+      |> IO.inspect(label: "Fresh Data")
 
     if fresh_data != stale_data do
       Sensor.publish(@name, fresh_data)

@@ -13,6 +13,7 @@ defmodule AwesomeDash.Scene.Dashboard do
   @label "BAT0"
   @spc " "
   @div ":"
+  @empty_time "00:00"
   @neg "-"
   @percent_sign "%"
   @watt "watts"
@@ -86,34 +87,29 @@ defmodule AwesomeDash.Scene.Dashboard do
     {:noreply, graph, push: graph}
   end
 
-  defp format_data({state, remaining, capacity, capacity_design, rate, current_power}) do
+  def handle_info({:sensor, :registered, {:battery0, _v, _d}}, graph) do
+    IO.puts("BAT0 Sensor Registered")
+
+    {:noreply, graph}
+  end
+
+  def handle_info({:sensor, :unregistered, :battery0}, graph) do
+    IO.puts("BAT0 Sensor Unregistered")
+
+    {:noreply, graph}
+  end
+
+  defp format_data({state, percent, time, wear, current_power}) do
     {
       Map.get(@battery_state, state, @missing),
-      percentage(remaining, capacity),
-      time_left(state, remaining, capacity, rate),
-      wear(capacity, capacity_design),
-      current_power(current_power)
+      [Integer.to_string(percent), @percent_sign],
+      time_format(time),
+      [Integer.to_string(wear), @percent_sign],
+      [Float.to_string(current_power), @spc, @watt]
     }
   end
 
-  defp percentage(remaining, capacity) when capacity > 0 do
-    [
-      Integer.to_string(floor(remaining / capacity * 100)),
-      @percent_sign
-    ]
-  end
-
-  defp percentage(_, _), do: @missing
-
-  defp time_left("Charging", remaining, capacity, rate) when rate > 0 do
-    ((capacity - remaining) / rate) |> time_format()
-  end
-
-  defp time_left("Discharging", remaining, _capacity, rate) when rate > 0 do
-    (remaining / rate) |> time_format()
-  end
-
-  defp time_left(_, _, _, _), do: @missing
+  defp time_format(0), do: @empty_time
 
   defp time_format(time) do
     hours = floor(time)
@@ -128,27 +124,4 @@ defmodule AwesomeDash.Scene.Dashboard do
     ]
   end
 
-  defp wear(capacity, capacity_design) when capacity_design > 0 do
-    wear = floor(100 - capacity / capacity_design * 100)
-
-    [
-      @neg,
-      Integer.to_string(wear),
-      @percent_sign
-    ]
-  end
-
-  defp wear(_, _), do: @missing
-
-  defp current_power(current_power) do
-    power = Float.floor(current_power / 1_000_000, 2)
-
-    [
-      Float.to_string(power),
-      @spc,
-      @watt
-    ]
-  end
-
-  defp current_power(_), do: @missing
 end
