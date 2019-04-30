@@ -33,7 +33,7 @@ defmodule AwesomeDash.Sensor.Wlp3s0 do
 
     {:ok, timer} = :timer.send_interval(@timer_ms, :tick)
 
-    {:noreply, %{ state | %{timer: timer. data: data} }}
+    {:noreply, %{ state | timer: timer, data: data }}
   end
 
   def handle_info(:tick, %{data: %{time: time, up: up, down: down} = stale_data, t: t} = state) do
@@ -42,8 +42,8 @@ defmodule AwesomeDash.Sensor.Wlp3s0 do
 
     if fresh_data != stale_data do
       calc_speed = speed_formula(time, ntime)
-      up_speed = calc_speed(up, nup)
-      down_speed = calc_speed(down, ndown)
+      up_speed = calc_speed.(up, nup)
+      down_speed = calc_speed.(down, ndown)
 
       Sensor.publish(@name, {up_speed, down_speed, @spd})
 
@@ -56,7 +56,7 @@ defmodule AwesomeDash.Sensor.Wlp3s0 do
   defp speed_formula(old_time, new_time) do
     time_diff = new_time - old_time
     fn (old, new) ->
-      ((new - old) / time_diff) / 1024^2
+      ((new - old) / time_diff) / :math.pow(1024, 2) |> round()
       |> IO.inspect(label: "calculate speed")
     end
   end
