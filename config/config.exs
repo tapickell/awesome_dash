@@ -6,7 +6,7 @@ use Mix.Config
 config :awesome_dash, :viewport, %{
   name: :main_viewport,
   size: {900, 200},
-  default_scene: {AwesomeDash.Scene.Splash, AwesomeDash.Scene.Dashboard},
+  default_scene: {AwesomeDash.Scene.Dashboard, nil},
   drivers: [
     %{
       module: Scenic.Driver.Glfw,

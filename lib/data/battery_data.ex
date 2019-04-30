@@ -1,6 +1,8 @@
 defmodule AwesomeDash.BatteryData do
   alias AwesomeDash.Data
 
+  require Logger
+
   @power_path "/sys/class/power_supply/"
   @batteries ["BAT0", "BAT1"]
 
@@ -35,12 +37,30 @@ defmodule AwesomeDash.BatteryData do
    this may be a small edge case I believe as the device would have to have
    power bridge and also internal and external batteries
    my X240 does and I saw this bug using Vicious battery widget
-   when I added a new battery while the system was running of
+   when I added a new battery while the system was running off
    the internal battery. It could not get a value from one of
    the files that was not checked before reading from
    that lib assumes that the file will always exist
    after fully charging the new battery and then rebooting the system
    that file then was existing and the widget / and desktop worked again
+
+   Maybe this can be returned to the sensor GenServer along with the data
+   anad can be reused as a config option when fetching data.
+   On first run not option for system_type is present 
+   so we test all file locations to assert the system_type
+   Then we process the data from the correct files and return 
+   the data along with the system_type
+   {:system_type, data}
+   on a subsequent call the GenServer can pass the :system_type
+   back as an option so the file checks can be skipped.
+   this should only be done for a set number of intervals
+   then a call without should be performed to break the cache 
+   of the system_type to ensure we are still correct.
+   This could safley happen once a day.
+
+   Or maybe this is too much to worry about and making that decision
+   on the fly everytime is ok and not a big performance hit.
+
   """
 
   def fetch(battery) when battery in @batteries do
@@ -53,8 +73,13 @@ defmodule AwesomeDash.BatteryData do
       current_power = Task.await(power_task)
       {percent, time, wear} = Task.await(capacity_task)
 
+      Logger.info("battery fetch: #{inspect({state, percent, time, wear, current_power})}")
+
       {state, percent, time, wear, current_power}
     end
+  end
+
+  def fetch(system_type, battery) when battery in @batteries do
   end
 
   defp battery_present(battery) do

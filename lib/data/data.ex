@@ -1,5 +1,4 @@
 defmodule AwesomeDash.Data do
-
   require Logger
 
   @div "/"
@@ -12,8 +11,12 @@ defmodule AwesomeDash.Data do
       Logger.info("read value: #{parsed_value}")
       parsed_value
     else
-      :error -> default
-      false -> default
+      :error ->
+        default
+
+      false ->
+        default
+
       string when is_binary(string) ->
         Logger.info("string value: #{string}")
         string

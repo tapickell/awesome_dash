@@ -5,6 +5,8 @@ defmodule AwesomeDash.Scene.Dashboard do
   alias Scenic.ViewPort
   alias Scenic.Sensor
 
+  require Logger
+
   import Scenic.Primitives
   import AwesomeDash.Components
 
@@ -12,12 +14,14 @@ defmodule AwesomeDash.Scene.Dashboard do
   @font_size 16
 
   def init(_, opts) do
+    Logger.info("init on dashboard scene")
+
     {:ok, %ViewPort.Status{size: {vp_width, _}}} =
       opts[:viewport]
       |> ViewPort.info()
 
     graph =
-      Graph.build(font: :roboto, font_size: 16, theme: :dark)
+      Graph.build(font: :roboto, font_size: 16)
       |> group(
         fn graph ->
           graph
@@ -29,5 +33,4 @@ defmodule AwesomeDash.Scene.Dashboard do
 
     {:ok, graph, push: graph}
   end
-
 end
