@@ -8,7 +8,7 @@ defmodule AwesomeDash.NetworkData do
   end
 
   def fetch(nic) do
-    %{Map.merge(%State{}, fetch_bytes()) | time: :os.system_time()}
+    %{Map.merge(%State{}, fetch_bytes()) | time: system_seconds()}
   end
 
   defp fetch_data() do
@@ -29,5 +29,10 @@ defmodule AwesomeDash.NetworkData do
   defp fetch_packets() do
     [_up_bytes, up_packets, _down_bytes, down_packets] = fetch_data()
     %{up: up_packets, down: down_packets}
+  end
+
+  defp system_seconds() do
+    {_, seconds, _} = :os.timestamp()
+    seconds
   end
 end

@@ -25,10 +25,10 @@ defmodule AwesomeDash.Sensor.Wlp3s0 do
   def init(_) do
     Sensor.register(@name, @version, @description)
 
-    {:continue, %State{t: 0}}
+    {:ok, %State{t: 0}, {:continue, :first_run}}
   end
 
-  def handle_continue(:continue, state) do
+  def handle_continue(:first_run, state) do
     data = AwesomeDash.NetworkData.fetch(@nic)
 
     {:ok, timer} = :timer.send_interval(@timer_ms, :tick)
@@ -55,8 +55,13 @@ defmodule AwesomeDash.Sensor.Wlp3s0 do
 
   defp speed_formula(old_time, new_time) do
     time_diff = new_time - old_time
+    Logger.warn("Speed Calc => (time_diff: #{time_diff})")
+    mbs = :math.pow(1024, 2)
     fn (old, new) ->
-      ((new - old) / time_diff) / :math.pow(1024, 2) |> round()
+      Logger.warn("Speed Calc => (old: #{old}, - new: #{new})")
+      ((new - old) / time_diff) / mbs
+      |> Kernel.*(1000)
+      |> Float.round(1)
       |> IO.inspect(label: "calculate speed")
     end
   end
