@@ -11,6 +11,8 @@ defmodule AwesomeDash.Component.NetSpeed do
 
   @font_size 16
   @spc " "
+  @down "v"
+  @up "^"
 
   @graph Graph.build()
          |> group(fn g ->
@@ -41,7 +43,7 @@ defmodule AwesomeDash.Component.NetSpeed do
     Logger.info("NetSpeed init called with sensor: #{sensor}")
 
     if sensor do
-      Logger.info("Battery Sensor.subscribe called with sensor: #{sensor}")
+      Logger.info("Wlp3s0 Sensor.subscribe called with sensor: #{sensor}")
       Sensor.subscribe(sensor)
     end
 
@@ -53,5 +55,51 @@ defmodule AwesomeDash.Component.NetSpeed do
     }
 
     {:ok, state, push: @graph}
+  end
+
+  def handle_info(
+        {:sensor, :data, {sensor, data, _}},
+        %{graph: graph, label: label, sensor: sensor, translate: translate} = state
+      ) do
+    {down, up, rate} = data
+
+    new_graph =
+      graph
+      |> Graph.modify(
+        :all,
+        &text(
+          &1,
+          IO.iodata_to_binary([
+            label,
+            @spc,
+            @down,
+            @spc,
+            Float.to_string(down),
+            @spc,
+            rate,
+            @spc,
+            @up,
+            Float.to_string(up),
+            @spc,
+            rate,
+            @spc
+          ])
+        )
+      )
+      |> Graph.modify(:all, &update_opts(&1, translate: translate))
+
+    {:noreply, %{state | graph: new_graph}, push: new_graph}
+  end
+
+  def handle_info({:sensor, :registered, {sensor, _v, _d}}, %{sensor: sensor} = s) do
+    Logger.info("#{sensor} Sensor Registered")
+
+    {:noreply, s}
+  end
+
+  def handle_info({:sensor, :unregistered, sensor}, %{sensor: sensor} = s) do
+    Logger.warn("#{sensor} Sensor Unregistered")
+
+    {:noreply, s}
   end
 end

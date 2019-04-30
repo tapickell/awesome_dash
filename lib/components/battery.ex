@@ -48,15 +48,15 @@ defmodule AwesomeDash.Component.Battery do
   }
 
   @graph Graph.build()
-  |> group(fn g ->
-    g
-    |> text(
-      @spc,
-      id: :all,
-      text_align: :center,
-      font_size: @font_size
-    )
-  end)
+         |> group(fn g ->
+           g
+           |> text(
+             @spc,
+             id: :all,
+             text_align: :center,
+             font_size: @font_size
+           )
+         end)
 
   def info(data),
     do: """
@@ -72,7 +72,7 @@ defmodule AwesomeDash.Component.Battery do
     Logger.info("Options keys should contain :sensor #{inspect(options)}")
     opts = options[:styles]
     sensor = opts[:sensor]
-    translate = Map.get(opts, :translate, {0,0})
+    translate = Map.get(opts, :translate, {0, 0})
     Logger.info("Battery init called with sensor: #{sensor}")
 
     if sensor do
@@ -94,8 +94,10 @@ defmodule AwesomeDash.Component.Battery do
   # if we want to color parts separately then we need different
   # text primitives for each and to translate each horizontally by the
   # index of previous text + length of the previous text
-  def handle_info({:sensor, :data, {sensor, data, _}},
-    %{graph: graph,label: label, sensor: sensor, translate: translate} = state) do
+  def handle_info(
+        {:sensor, :data, {sensor, data, _}},
+        %{graph: graph, label: label, sensor: sensor, translate: translate} = state
+      ) do
     Logger.info("handle info for #{sensor} sensor called: #{inspect(data)}")
 
     {status, percent, time, wear, current_power} = format_data(data)
@@ -104,7 +106,9 @@ defmodule AwesomeDash.Component.Battery do
       graph
       |> Graph.modify(
         :all,
-        &text(&1, IO.iodata_to_binary([
+        &text(
+          &1,
+          IO.iodata_to_binary([
             label,
             @div,
             @spc,
@@ -162,5 +166,4 @@ defmodule AwesomeDash.Component.Battery do
       @time_label
     ]
   end
-
 end

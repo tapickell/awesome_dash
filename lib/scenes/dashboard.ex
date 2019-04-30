@@ -26,7 +26,14 @@ defmodule AwesomeDash.Scene.Dashboard do
         fn graph ->
           graph
           |> battery("BAT0", sensor: :battery0)
-          |> battery("BAT1", sensor: :battery1, translate: {0, @font_size + @font_size / 2})
+          |> battery("BAT1",
+            sensor: :battery1,
+            translate: {0, @font_size + @font_size / 2}
+          )
+          |> net_speed("WLP3S0",
+            sensor: :wlp3s0,
+            translate: {0, @font_size * 2 + @font_size}
+          )
         end,
         translate: {vp_width / 2, @body_offset}
       )

@@ -13,10 +13,10 @@ defmodule AwesomeDash.NetworkData do
 
   defp fetch_data() do
     File.stream!("/proc/net/dev")
-    |> Stream.filter(fn(l) -> String.starts_with?(l, "wlp3s0") end)
-    |> Stream.flat_map(fn(l) -> String.split(l) end)
+    |> Stream.filter(fn l -> String.starts_with?(l, "wlp3s0") end)
+    |> Stream.flat_map(fn l -> String.split(l) end)
     |> Stream.drop(1)
-    |> Stream.reject(fn(e) -> e == "0" end)
+    |> Stream.reject(fn e -> e == "0" end)
     |> Stream.map(&String.to_integer/1)
     |> Enum.to_list()
   end

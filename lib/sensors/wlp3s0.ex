@@ -13,8 +13,8 @@ defmodule AwesomeDash.Sensor.Wlp3s0 do
 
   defmodule State do
     defstruct t: nil,
-      timer: nil,
-      data: %{time: nil, up: 0, down: 0}
+              timer: nil,
+              data: %{time: nil, up: 0, down: 0}
   end
 
   @nic "wlp3s0"
@@ -33,7 +33,7 @@ defmodule AwesomeDash.Sensor.Wlp3s0 do
 
     {:ok, timer} = :timer.send_interval(@timer_ms, :tick)
 
-    {:noreply, %{ state | timer: timer, data: data }}
+    {:noreply, %{state | timer: timer, data: data}}
   end
 
   def handle_info(:tick, %{data: %{time: time, up: up, down: down} = stale_data, t: t} = state) do
@@ -57,9 +57,11 @@ defmodule AwesomeDash.Sensor.Wlp3s0 do
     time_diff = new_time - old_time
     Logger.warn("Speed Calc => (time_diff: #{time_diff})")
     mbs = :math.pow(1024, 2)
-    fn (old, new) ->
+
+    fn old, new ->
       Logger.warn("Speed Calc => (old: #{old}, - new: #{new})")
-      ((new - old) / time_diff) / mbs
+
+      ((new - old) / time_diff / mbs)
       |> Kernel.*(1000)
       |> Float.round(1)
       |> IO.inspect(label: "calculate speed")
